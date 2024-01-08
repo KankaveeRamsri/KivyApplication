@@ -47,7 +47,7 @@ class MainWidget(Widget):
         spacing = self.V_LINES_SPACING * self.width
         offset = -int(self.V_NB_LINES/2 )  
         for i in range(0, self.V_NB_LINES):
-            line_x = central_line_x + offset*spacing
+            line_x = int(central_line_x + offset*spacing)
             self.vertical_lines[i].points = [line_x, 0, line_x, self.height]
             offset += 1
     
