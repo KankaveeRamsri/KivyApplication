@@ -8,6 +8,8 @@ class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
     
+    line = None
+    
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         # print("INIT W:" + str(self.width) + " H:" + str(self.height))
@@ -34,7 +36,10 @@ class MainWidget(Widget):
     def init_vertical_line(self):
         with self.canvas:
             Color(1, 1, 1)
-            Line(points=[100, 0, 100, 100])
+            self.line = Line(points=[self.width/2, 0, self.width/2, 100])
+    
+    def update_vertical_lines(self):
+        self.line.points = []
     
     
 class GalaxyApp(App):
