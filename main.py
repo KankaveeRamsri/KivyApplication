@@ -10,13 +10,14 @@ class MainWidget(Widget):
     perspective_point_y = NumericProperty(0)
     
     V_NB_LINES = 10
-    V_LINES_SPACING = .1 # percentage in screen width
+    V_LINES_SPACING = .25 # percentage in screen width
     vertical_lines = []
     
     H_NB_LINES = 15
     H_LINES_SPACING = .1 # percentage in screen height
     horizontal_lines = []
     
+    SPEED = 4
     current_offset_y = 0
     
     def __init__(self, **kwargs):
@@ -114,7 +115,11 @@ class MainWidget(Widget):
         # print("update")
         self.update_vertical_lines()
         self.update_horizontal_lines()
-        self.current_offset_y += 1
+        self.current_offset_y += self.SPEED
+        
+        spacing_y = self.H_LINES_SPACING*self.height
+        if self.current_offset_y >= spacing_y:
+            self.current_offset_y -= spacing_y
     
 class GalaxyApp(App):
     pass
