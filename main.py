@@ -3,6 +3,7 @@ from kivy.properties import NumericProperty
 from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line
+from kivy.properties import Clock
 
 class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
@@ -21,6 +22,7 @@ class MainWidget(Widget):
         # print("INIT W:" + str(self.width) + " H:" + str(self.height))
         self.init_vertical_lines()
         self.init_horizontal_lines()
+        Clock.schedule_interval(self.update, 1.0 / 60)
     
     def on_parent(self, widget, parent):
         # print("ON PARENT W:" + str(self.width) + " H:" + str(self.height))
@@ -30,8 +32,9 @@ class MainWidget(Widget):
         # print("ON SIZE W:" + str(self.width) + " H:" + str(self.height))
         # self.perspective_point_x = self.width/2
         # self.perspective_point_y = self.height * 0.75
-        self.update_vertical_lines()
-        self.update_horizontal_lines()
+        # self.update_vertical_lines()
+        # self.update_horizontal_lines()
+        pass 
     
     def on_perspective_point_x(self, widget, value):
         # print("PX: " + str(value))
@@ -105,6 +108,10 @@ class MainWidget(Widget):
         
         return int(tr_x), int(tr_y)
     
+    def update(self, dt):
+        # print("update")
+        self.update_vertical_lines()
+        self.update_horizontal_lines()
     
 class GalaxyApp(App):
     pass
