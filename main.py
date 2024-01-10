@@ -130,7 +130,7 @@ class MainWidget(Widget):
         if self.current_offset_y >= spacing_y:
             self.current_offset_y -= spacing_y
         
-        self.current_offset_x += self.SPEED_X * time_factor
+        # self.current_offset_x += self.SPEED_X * time_factor
     
 class GalaxyApp(App):
     pass
