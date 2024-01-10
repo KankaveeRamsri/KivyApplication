@@ -16,6 +16,7 @@ from kivy.properties import Clock
 
 class MainWidget(Widget):
     from transforms import transform, transform_2D, transform_perspective
+    from user_actions import on_keyboard_down, on_keyboard_up, on_touch_down, on_touch_up, keyboard_closed
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
     
@@ -47,11 +48,6 @@ class MainWidget(Widget):
             self._keyboard.bind(on_key_up=self.on_keyboard_up)
         
         Clock.schedule_interval(self.update, 1.0 / 60)
-
-    def keyboard_closed(self):
-        self._keyboard.unbind(on_key_down=self.on_keyboard_down)
-        self._keyboard.unbind(on_key_up=self.on_keyboard_up)
-        self._keyboard = None
 
     def is_desktop(self):
         if platform in ('linus', 'win', 'macosx'):
@@ -117,29 +113,6 @@ class MainWidget(Widget):
             x1, y1 = self.transform(xmin, line_y)
             x2, y2 = self.transform(xmax, line_y)
             self.horizontal_lines[i].points = [x1, y1, x2, y2]
-    
-    def on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        if keycode[1] == 'left':
-            self.current_speed_x = self.SPEED_X
-        elif keycode[1] == 'right':
-            self.current_speed_x = -self.SPEED_X
-        return True
-    
-    def on_keyboard_up(self, keyboard, keycode):
-        self.current_speed_x = 0
-        return True
-        
-    def on_touch_down(self, touch):
-        if touch.x < self.width/2:
-            # print("<-")
-            self.current_speed_x = self.SPEED_X
-        else:
-            # print("->")
-            self.current_speed_x = -self.SPEED_X
-    
-    def on_touch_up(self, touch):
-        print("UP")
-        self.current_speed_x = 0
     
     def update(self, dt):
         # print("dt: " + str(dt * 60) )
