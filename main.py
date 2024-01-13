@@ -11,6 +11,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import Line, Quad
 from kivy.properties import Clock
+import random
 
 
 
@@ -20,15 +21,15 @@ class MainWidget(Widget):
     perspective_point_x = NumericProperty(0)
     perspective_point_y = NumericProperty(0)
     
-    V_NB_LINES = 4
-    V_LINES_SPACING = .1 # percentage in screen width
+    V_NB_LINES = 8
+    V_LINES_SPACING = .2 # percentage in screen width
     vertical_lines = []
     
     H_NB_LINES = 15
     H_LINES_SPACING = .1 # percentage in screen height
     horizontal_lines = []
     
-    SPEED = 1
+    SPEED = 4
     current_offset_y = 0
     current_y_loop = 0
     
@@ -36,7 +37,7 @@ class MainWidget(Widget):
     current_speed_x = 0
     current_offset_x = 0
     
-    NB_TILES = 4
+    NB_TILES = 16
     tiles = []
     tiles_coordinates = []
     
@@ -66,7 +67,12 @@ class MainWidget(Widget):
             for i in range(0, self.NB_TILES):
                 self.tiles.append(Quad())
     
+    def pre_fill_tiles_coordinates(self):
+        for i in range(0, 10):
+            self.tiles_coordinates.append((0, i))
+    
     def generate_tiles_coordinates(self): 
+        last_x = 0
         last_y = 0
         
         # clean the coordinates that are out of the screen
@@ -77,11 +83,37 @@ class MainWidget(Widget):
         
         if len(self.tiles_coordinates) > 0:
             last_coordinates = self.tiles_coordinates[-1]
+            last_x = last_coordinates[0]
             last_y = last_coordinates[1] + 1
+            
         print("foo1")
         
         for i in range(len(self.tiles_coordinates), self.NB_TILES):
-            self.tiles_coordinates.append((0, last_y))
+            r = random.randint(0, 2)
+            # 0 -> straight
+            # 1 -> right
+            # 2 -> left
+            start_index = -int(self.V_NB_LINES/2)+1
+            end_index = start_index+self.V_NB_LINES-1
+            if last_x <= start_index:
+                r = 1
+            if last_x >= end_index:
+                r = 2
+            
+            self.tiles_coordinates.append((last_x, last_y))
+            if (r == 1):
+                last_x += 1
+                self.tiles_coordinates.append((last_x, last_y))
+                last_y += 1
+                self.tiles_coordinates.append((last_x, last_y))
+            
+            if (r == 2):
+                last_x -= 1
+                self.tiles_coordinates.append((last_x, last_y))
+                last_y += 1
+                self.tiles_coordinates.append((last_x, last_y))
+            
+            
             last_y += 1
             
         print("foo2")
@@ -172,7 +204,7 @@ class MainWidget(Widget):
             self.generate_tiles_coordinates()
             print("loop : " + str(self.current_y_loop))
             
-        # self.current_offset_x += self.current_speed_x * time_factor
+        self.current_offset_x += self.current_speed_x * time_factor
     
 class GalaxyApp(App):
     pass
