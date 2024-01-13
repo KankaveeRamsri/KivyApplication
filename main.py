@@ -14,6 +14,7 @@ from kivy.uix.widget import Widget
 import random
 from kivy.lang.builder import Builder
 from menu import RelativeLayout
+from kivy.core.audio import SoundLoader
 
 
 Builder.load_file("menu.kv")
@@ -38,7 +39,7 @@ class MainWidget(RelativeLayout):
     current_offset_y = 0
     current_y_loop = 0
     
-    SPEED_X = 3.0
+    SPEED_X = 3
     current_speed_x = 0
     current_offset_x = 0
     
@@ -57,6 +58,7 @@ class MainWidget(RelativeLayout):
     
     menu_title = StringProperty("T R I   R U N N E R")
     menu_button_title = StringProperty("START")
+    score_txt = StringProperty()
     
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -74,13 +76,20 @@ class MainWidget(RelativeLayout):
             self._keyboard.bind(on_key_up=self.on_keyboard_up)
         
         Clock.schedule_interval(self.update, 1.0 / 60)
-
+        
+        sound_path = "/Users/balast/Downloads/HateBerry - Toxic.mp3"
+        self.sound = SoundLoader.load(sound_path)
+        if self.sound:
+            self.sound.loop = True  # ตั้งค่าให้เพลงเล่นซ้ำ
+            self.sound.play()
+            
     def reset_game(self):
         self.current_offset_y = 0
         self.current_y_loop = 0
         self.current_speed_x = 0
         self.current_offset_x = 0
         self.tiles_coordinates = []
+        self.score_txt = "SCORE: " + str(self.current_y_loop)
         self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
         
@@ -274,6 +283,7 @@ class MainWidget(RelativeLayout):
             while self.current_offset_y >= spacing_y:
                 self.current_offset_y -= spacing_y
                 self.current_y_loop += 1
+                self.score_txt = "SCORE: " + str(self.current_y_loop)
                 self.generate_tiles_coordinates()
                 print("loop : " + str(self.current_y_loop))
         
@@ -282,7 +292,7 @@ class MainWidget(RelativeLayout):
             
         if not self.check_ship_collision() and not self.state_game_over:
             self.state_game_over = True
-            self.menu_title = "G  A  M  E   O  V  E  R  !"
+            self.menu_title = "G  A  M  E   O  V  E  R!"
             self.menu_button_title = "RESTART"
             self.menu_widget.opacity = 1
             print("GAME OVER!")
