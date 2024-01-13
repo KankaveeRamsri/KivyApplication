@@ -23,18 +23,18 @@ class MainWidget(Widget):
     perspective_point_y = NumericProperty(0)
     
     V_NB_LINES = 8
-    V_LINES_SPACING = .2 # percentage in screen width
+    V_LINES_SPACING = .4 # percentage in screen width
     vertical_lines = []
     
     H_NB_LINES = 15
     H_LINES_SPACING = .1 # percentage in screen height
     horizontal_lines = []
     
-    SPEED = 4
+    SPEED = .8
     current_offset_y = 0
     current_y_loop = 0
     
-    SPEED_X = 12
+    SPEED_X = 3.0
     current_speed_x = 0
     current_offset_x = 0
     
@@ -223,7 +223,9 @@ class MainWidget(Widget):
         self.update_horizontal_lines()
         self.update_tiles()
         self.update_ship()
-        self.current_offset_y += self.SPEED * time_factor
+        
+        speed_y = self.SPEED * self.height / 100
+        self.current_offset_y += speed_y * time_factor
         
         spacing_y = self.H_LINES_SPACING*self.height
         if self.current_offset_y >= spacing_y:
@@ -231,8 +233,9 @@ class MainWidget(Widget):
             self.current_y_loop += 1
             self.generate_tiles_coordinates()
             print("loop : " + str(self.current_y_loop))
-            
-        self.current_offset_x += self.current_speed_x * time_factor
+        
+        speed_x = self.current_speed_x * self.width / 100
+        self.current_offset_x += speed_x * time_factor
     
 class GalaxyApp(App):
     pass
